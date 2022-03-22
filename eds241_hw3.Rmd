@@ -1,0 +1,66 @@
+---
+title: 'EDS 241: Assignment 3'
+author: "Alexandra Yousefivand"
+date: '`r format(Sys.time(), "%m/%d/%Y")`'
+output: 
+  pdf_document:
+    toc: false
+    number_sections: yes
+header-includes:
+  \setlength{\parindent}{1em}
+  \usepackage{float}
+  \renewcommand{\thesection}{Question (\alph{section})}
+---
+
+``` {r setup, echo = FALSE, message = FALSE, warning = FALSE}
+
+# set default chunk options
+knitr::opts_chunk$set(fig.width = 4, fig.height = 3,
+                      echo = TRUE, message = FALSE, warning = FALSE)                     
+```
+
+
+```{r}
+# load packages
+packages=c("readxl", "stargazer", "here", "tidyr", "dplyr","stringr", "janitor", 
+           "cowplot", "ggplot2", "tinytex", "datasets", "tibble", "estimatr")
+
+for (i in packages) {
+  if (require(i,character.only=TRUE)==FALSE) {
+    install.packages(i,repos='http://cran.us.r-project.org')
+  }
+  else {
+    require(i,character.only=TRUE)
+  }
+}
+
+#devtools::install_github('rstudio/rmarkdown')
+options(scipen=999) # not scientific notation
+```
+
+
+```{r}
+# load data
+data_raw <- read.csv("SMOKING_EDS241.csv")
+
+data <- data_raw %>% clean_names()
+```
+
+
+(a) What is the unadjusted mean difference in birth weight of infants with smoking and nonsmoking mothers?
+
+
+```{r}
+# subset smoking mothers
+data_smoking <- data %>% filter(tobacco == 1)
+
+# subset nonsmoking mothers
+data_non_smoking <- data %>% filter(tobacco == 0)
+```
+
+
+```{r}
+unadjusted_mean_difference <-
+  mean(data_non_smoking$birthwgt) - mean(data_smoking$birthwgt)
+```
+
